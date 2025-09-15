@@ -6,8 +6,6 @@
   <title>Sisso Bond 💜</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap');
-
-    /* Loading Screen */
     #loading {
       position: fixed;
       top: 0; left: 0;
@@ -21,8 +19,6 @@
       z-index: 2000;
       color: #a83279;
     }
-
-    /* Global setup */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -37,7 +33,6 @@
       50% {background-position: 100% 50%;}
       100% {background-position: 0% 50%;}
     }
-
     h1, h2 {
       font-family: 'Great Vibes', cursive;
       margin: 10px;
@@ -54,7 +49,6 @@
       from { text-shadow: 0 0 10px #fff, 0 0 20px #ffb6c1, 0 0 30px #ff69b4; }
       to { text-shadow: 0 0 20px #fff, 0 0 30px #ff69b4, 0 0 40px #ff1493; }
     }
-
     section {
       padding: 60px 20px;
       min-height: 100vh;
@@ -64,8 +58,6 @@
       justify-content: center;
       position: relative;
     }
-
-    /* Typing effect */
     .typing {
       font-size: 1.5rem;
       border-right: 2px solid #fff;
@@ -80,7 +72,29 @@
     @keyframes blink {
       50% {border-color: transparent;}
     }
-
+    /* Slideshow */
+    #slideshow {
+      max-width: 480px;
+      margin: 0 auto 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #ff69b4aa;
+      overflow: hidden;
+      position: relative;
+    }
+    #slideshow img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      opacity: 0;
+      position: absolute;
+      top: 0; left: 0; 
+      transition: opacity 1s ease-in-out;
+      border-radius: 15px;
+    }
+    #slideshow img.active {
+      opacity: 1;
+      position: relative;
+    }
     /* Gallery */
     .gallery {
       display: grid;
@@ -95,6 +109,8 @@
       transition: transform .4s, box-shadow .4s;
       box-shadow: 0 6px 15px rgba(0,0,0,0.3);
       animation: pulse 6s infinite ease-in-out;
+      object-fit: cover;
+      height: 300px;
     }
     .gallery img:hover {
       transform: rotate(3deg) scale(1.08);
@@ -104,8 +120,6 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); }
     }
-
-    /* Bond text */
     .bond-box {
       background: rgba(255,255,255,0.2);
       padding: 30px;
@@ -115,8 +129,6 @@
       text-align: center;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-
-    /* Prank button */
     .prank-btn {
       padding: 15px 30px;
       border: none;
@@ -131,8 +143,6 @@
     .prank-btn:hover {
       transform: scale(1.1);
     }
-
-    /* Floating hearts & sparkles */
     .float {
       position: fixed;
       bottom: -10px;
@@ -145,8 +155,6 @@
       from {transform: translateY(0) scale(1); opacity: 1;}
       to {transform: translateY(-110vh) scale(0.5); opacity: 0;}
     }
-
-    /* Surprise modal */
     .modal {
       display: none;
       position: fixed;
@@ -170,16 +178,12 @@
       from {transform: scale(0.5); opacity: 0;}
       to {transform: scale(1); opacity: 1;}
     }
-
-    /* Footer */
     footer {
       padding: 20px;
       text-align: center;
       background: rgba(0,0,0,0.3);
       font-size: 0.9rem;
     }
-
-    /* Shaky prank text */
     .shaky:hover {
       animation: shake 0.3s infinite;
     }
@@ -191,8 +195,6 @@
       80% { transform: translate(1px, -1px) rotate(1deg); }
       100% { transform: translate(-1px, 2px) rotate(-1deg); }
     }
-
-    /* Music button */
     #music-btn {
       position: fixed;
       bottom: 20px;
@@ -210,33 +212,29 @@
   </style>
 </head>
 <body>
-  <!-- Loading Screen -->
   <div id="loading">⏳ Scanning sisso cuteness...</div>
-
-  <!-- Background Music -->
   <audio id="bg-music" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg">
   </audio>
   <button id="music-btn">🎵 Play Music</button>
-
-  <!-- Section 1: Welcome -->
   <section>
     <h1>💜 Hey Sisso 💜</h1>
     <div class="typing">Welcome to our magical little world...</div>
   </section>
-
-  <!-- Section 2: Gallery -->
   <section>
     <h2 class="shaky">📸 My Cute Sisso</h2>
     <div class="gallery">
-      <img src="https://picsum.photos/400/300?random=11" alt="Memory 1">
-      <img src="https://picsum.photos/400/300?random=12" alt="Memory 2">
-      <img src="https://picsum.photos/400/300?random=13" alt="Memory 3">
-      <img src="https://picsum.photos/400/300?random=14" alt="Memory 4">
+      <img src="IMG-20250914-WA0019.jpg" alt="Memory 1">
+      <img src="IMG-20250914-WA0021.jpg" alt="Memory 2">
+      <img src="IMG-20250914-WA0025.jpg" alt="Memory 3">
+      <img src="IMG-20250914-WA0024.jpg" alt="Memory 4">
+      <img src="IMG-20250914-WA0033.jpg" alt="Memory 5">
+      <img src="IMG-20250914-WA0032.jpg" alt="Memory 6">
+      <img src="IMG-20250914-WA0034.jpg" alt="Memory 7">
+      <img src="IMG-20250914-WA0030.jpg" alt="Memory 8">
+      <img src="IMG-20250914-WA0035.jpg" alt="Memory 9">
     </div>
   </section>
-
-  <!-- Section 3: Bond -->
   <section>
     <h2>🌸 Our Precious Bond 🌸</h2>
     <div class="bond-box">
@@ -246,14 +244,10 @@
       No matter what, our bond is infinite 💫  
     </div>
   </section>
-
-  <!-- Section 4: Fun Surprise -->
   <section>
     <h2>🎉 A Little Fun 🎉</h2>
     <button class="prank-btn" id="prank">Click Me!</button>
   </section>
-
-  <!-- Section 5: Ending -->
   <section>
     <h2>💜 Always With You 💜</h2>
     <p style="max-width:600px;text-align:center;">
@@ -261,12 +255,9 @@
       I’ll annoy you forever, but also protect you forever 💜  
     </p>
   </section>
-
   <footer>
     Made with 💜 by your brother
   </footer>
-
-  <!-- Modal Surprise -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h2>Gotcha Sisso 😜</h2>
@@ -275,16 +266,12 @@
       <button onclick="closeModal()">Awww 💜</button>
     </div>
   </div>
-
   <script>
-    // Fake loading
     window.addEventListener("load", () => {
       setTimeout(() => {
         document.getElementById("loading").style.display = "none";
       }, 2000);
     });
-
-    // Music autoplay fix
     const music = document.getElementById("bg-music");
     const musicBtn = document.getElementById("music-btn");
     window.addEventListener("load", () => {
@@ -298,8 +285,6 @@
       music.play();
       musicBtn.style.display = "none";
     });
-
-    // Floating hearts & sparkles
     function createFloat() {
       const el = document.createElement("div");
       el.className = "float";
@@ -310,8 +295,6 @@
       setTimeout(() => el.remove(), 8000);
     }
     setInterval(createFloat, 700);
-
-    // Prank button moving around
     const prankBtn = document.getElementById("prank");
     prankBtn.addEventListener("mouseover", () => {
       const x = Math.random() * (window.innerWidth - 150);
@@ -323,13 +306,9 @@
     prankBtn.addEventListener("click", () => {
       document.getElementById("modal").style.display = "flex";
     });
-
-    // Close modal
     function closeModal() {
       document.getElementById("modal").style.display = "none";
     }
-
-    // Confetti effect only on background clicks
     document.body.addEventListener("click", (e) => {
       if (e.target.tagName === "BUTTON") return;
       for (let i=0;i<10;i++) {
@@ -344,8 +323,6 @@
         setTimeout(()=>confetti.remove(),3000);
       }
     });
-
-    // Random prank popups
     const prankMessages = [
       "Did you steal my chocolates again? 🍫",
       "Stop scrolling, sissoooo 😂",
@@ -354,7 +331,7 @@
     ];
     setInterval(() => {
       alert(prankMessages[Math.floor(Math.random()*prankMessages.length)]);
-    }, 30000); // every 30s
+    }, 30000);
   </script>
 </body>
 </html>
