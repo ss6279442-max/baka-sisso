@@ -7,6 +7,21 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap');
 
+    /* Loading Screen */
+    #loading {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #fbc2eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      z-index: 2000;
+      color: #a83279;
+    }
+
     /* Global setup */
     body {
       margin: 0;
@@ -26,13 +41,18 @@
     h1, h2 {
       font-family: 'Great Vibes', cursive;
       margin: 10px;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
     }
     h1 {
       font-size: 3rem;
     }
     h2 {
       font-size: 2rem;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #fff, 0 0 20px #ffb6c1, 0 0 30px #ff69b4; }
+      to { text-shadow: 0 0 20px #fff, 0 0 30px #ff69b4, 0 0 40px #ff1493; }
     }
 
     section {
@@ -72,11 +92,17 @@
     .gallery img {
       width: 100%;
       border-radius: 15px;
-      transition: transform .4s;
+      transition: transform .4s, box-shadow .4s;
       box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      animation: pulse 6s infinite ease-in-out;
     }
     .gallery img:hover {
-      transform: rotate(3deg) scale(1.05);
+      transform: rotate(3deg) scale(1.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
     }
 
     /* Bond text */
@@ -106,13 +132,14 @@
       transform: scale(1.1);
     }
 
-    /* Floating hearts */
-    .heart {
+    /* Floating hearts & sparkles */
+    .float {
       position: fixed;
       bottom: -10px;
       font-size: 20px;
       animation: floatUp 8s linear infinite;
       opacity: 0.8;
+      pointer-events: none;
     }
     @keyframes floatUp {
       from {transform: translateY(0) scale(1); opacity: 1;}
@@ -151,13 +178,46 @@
       background: rgba(0,0,0,0.3);
       font-size: 0.9rem;
     }
+
+    /* Shaky prank text */
+    .shaky:hover {
+      animation: shake 0.3s infinite;
+    }
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      20% { transform: translate(-1px, -2px) rotate(-1deg); }
+      40% { transform: translate(-3px, 0px) rotate(1deg); }
+      60% { transform: translate(3px, 2px) rotate(0deg); }
+      80% { transform: translate(1px, -1px) rotate(1deg); }
+      100% { transform: translate(-1px, 2px) rotate(-1deg); }
+    }
+
+    /* Music button */
+    #music-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: #fff;
+      color: #a83279;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2000;
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div id="loading">⏳ Scanning sisso cuteness...</div>
+
   <!-- Background Music -->
-  <audio id="bg-music" autoplay loop>
+  <audio id="bg-music" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg">
   </audio>
+  <button id="music-btn">🎵 Play Music</button>
 
   <!-- Section 1: Welcome -->
   <section>
@@ -167,7 +227,7 @@
 
   <!-- Section 2: Gallery -->
   <section>
-    <h2>📸 Our Memories</h2>
+    <h2 class="shaky">📸 My Cute Sisso</h2>
     <div class="gallery">
       <img src="https://picsum.photos/400/300?random=11" alt="Memory 1">
       <img src="https://picsum.photos/400/300?random=12" alt="Memory 2">
@@ -203,7 +263,7 @@
   </section>
 
   <footer>
-    Made with 💜 by your sibling
+    Made with 💜 by your brother
   </footer>
 
   <!-- Modal Surprise -->
@@ -217,17 +277,39 @@
   </div>
 
   <script>
-    // Floating hearts
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerText = Math.random() > 0.5 ? "💜" : "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 15 + "px";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 8000);
+    // Fake loading
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
+      }, 2000);
+    });
+
+    // Music autoplay fix
+    const music = document.getElementById("bg-music");
+    const musicBtn = document.getElementById("music-btn");
+    window.addEventListener("load", () => {
+      music.play().then(() => {
+        musicBtn.style.display = "none";
+      }).catch(() => {
+        musicBtn.style.display = "block";
+      });
+    });
+    musicBtn.addEventListener("click", () => {
+      music.play();
+      musicBtn.style.display = "none";
+    });
+
+    // Floating hearts & sparkles
+    function createFloat() {
+      const el = document.createElement("div");
+      el.className = "float";
+      el.innerText = Math.random() > 0.5 ? "💜" : (Math.random()>0.5 ? "✨" : "💖");
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.fontSize = Math.random() * 20 + 15 + "px";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 8000);
     }
-    setInterval(createHeart, 600);
+    setInterval(createFloat, 700);
 
     // Prank button moving around
     const prankBtn = document.getElementById("prank");
@@ -247,8 +329,9 @@
       document.getElementById("modal").style.display = "none";
     }
 
-    // Confetti effect
-    document.addEventListener("click", (e) => {
+    // Confetti effect only on background clicks
+    document.body.addEventListener("click", (e) => {
+      if (e.target.tagName === "BUTTON") return;
       for (let i=0;i<10;i++) {
         const confetti = document.createElement("div");
         confetti.innerText = "✨";
@@ -261,6 +344,17 @@
         setTimeout(()=>confetti.remove(),3000);
       }
     });
+
+    // Random prank popups
+    const prankMessages = [
+      "Did you steal my chocolates again? 🍫",
+      "Stop scrolling, sissoooo 😂",
+      "You’re cute but sooo annoying 💜",
+      "Guess what? You’re stuck with me forever 😜"
+    ];
+    setInterval(() => {
+      alert(prankMessages[Math.floor(Math.random()*prankMessages.length)]);
+    }, 30000); // every 30s
   </script>
 </body>
 </html>
