@@ -1,227 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Siblings' Fun Zone</title>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    position: relative;
-    overflow-x: hidden;
-    transition: background-color 0.5s, color 0.5s;
-    cursor: url('data:image/svg+xml;utf8,<svg fill="pink" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.42 3.42 5 5.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5 18.58 5 20 6.42 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'), auto;
-  }
-  body.light-mode {
-    background-color: #fefefe;
-    color: #222;
-    cursor: auto;
-  }
-  body.light-mode section { background-color: #fff; box-shadow: 0 0 15px #ff69b4aa; color: #222; }
-  body.light-mode header, body.light-mode h2 { color: #d6336c; text-shadow: none; }
-  header { font-size: 2.8rem; margin-bottom: 10px; color: #ff69b4; text-align: center; font-weight: bold; text-shadow: 0 0 6px #ff69b4cc; user-select: none; }
-  .welcome { font-size: 1.3rem; margin-bottom: 20px; text-align: center; max-width: 500px; line-height: 1.5; user-select: none; }
-  .story { font-style: italic; margin-bottom: 30px; max-width: 480px; text-align: center; }
-  section { background-color: #222; border-radius: 15px; padding: 20px; max-width: 480px; width: 100%; box-shadow: 0 0 15px #ff69b4aa; margin-bottom: 30px; }
-  h2 { color: #ff69b4; margin-top: 0; text-align: center; user-select: none; }
-  .cat-emoji { font-size: 2.5rem; cursor: pointer; user-select: none; display: inline-block; transition: transform 0.3s ease; margin: 0 8px; }
-  .cat-emoji:hover { transform: scale(1.4) rotate(20deg); }
-  .wiggle { animation: wiggle 0.5s; }
-  @keyframes wiggle { 0% { transform: rotate(0deg); } 25% { transform: rotate(15deg); } 50% { transform: rotate(-15deg); } 75% { transform: rotate(10deg); } 100% { transform: rotate(0deg); } }
-  button, .toggle-btn { background-color: #ff69b4; color: #121212; border: none; border-radius: 10px; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; transition: background-color 0.25s ease; user-select: none; }
-  button:hover, .toggle-btn:hover { background-color: #ff4c9a; }
-  #quote { text-align: center; margin-top: 18px; font-style: italic; font-size: 1.1rem; }
-  .emoji-reactions { margin-top: 10px; text-align: center; }
-  .emoji-reaction { font-size: 1.8rem; margin: 0 6px; cursor: pointer; user-select: none; transition: transform 0.2s ease; }
-  .emoji-reaction:hover { transform: scale(1.4); }
-  .animation-box { background-color: #330033; border-radius: 15px; padding: 18px; margin-top: 14px; text-align: center; cursor: pointer; user-select: none; box-shadow: 0 0 20px #ff69b4aa; }
-  .prank-text { opacity: 0; max-height: 0; overflow: hidden; transition: all 0.5s ease; margin-top: 12px; color: #ff69b4; font-weight: bold; font-size: 1.2rem; }
-  .prank-text.show { opacity: 1; max-height: 200px; }
-  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); justify-items: center; gap: 12px; margin-top: 15px; }
-  .gallery img { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; box-shadow: 0 0 10px #ff69b4cc; cursor: pointer; opacity: 0; animation: fadeIn 0.8s forwards; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-  .gallery img:hover { transform: scale(1.2); box-shadow: 0 0 20px #ff4c9aee; }
-  @keyframes fadeIn { to { opacity: 1; } }
-  @keyframes floatUp { from { transform: translateY(0) rotate(0deg); opacity: 1; } to { transform: translateY(-80px) rotate(360deg); opacity: 0; } }
-  .floating-heart { position: absolute; font-size: 2rem; pointer-events: none; animation: floatUp 1.5s ease forwards; }
-  #stars { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; }
-  .star { position: absolute; background: #ff69b4; width: 3px; height: 3px; border-radius: 50%; opacity: 0.8; animation: twinkle 3s infinite ease-in-out; }
-  @keyframes twinkle { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.2; } }
-  .mode-toggle-container { width: 480px; max-width: 100%; margin-bottom: 20px; text-align: right; }
-  #slideshow { max-width: 480px; margin: 0 auto 30px; border-radius: 15px; box-shadow: 0 0 15px #ff69b4aa; overflow: hidden; position: relative; }
-  #slideshow img { width: 100%; height: 280px; object-fit: cover; opacity: 0; position: absolute; top: 0; left: 0; transition: opacity 1s ease-in-out; }
-  #slideshow img.active { opacity: 1; position: relative; }
-  #trivia { max-width: 480px; margin: 0 auto 30px; }
-  #trivia button { margin-top: 10px; }
-  #messageBoard { max-width: 480px; margin: 0 auto 30px; }
-  #messageBoard textarea { width: 100%; height: 60px; border-radius: 10px; padding: 8px; font-size: 1rem; resize: none; }
-  #messageBoard button { margin-top: 8px; }
-  #messages { margin-top: 15px; max-height: 150px; overflow-y: auto; background: #330033; border-radius: 10px; padding: 10px; color: #ffb6c1; font-style: italic; }
-  #messages p { opacity: 0; transform: translateY(10px); animation: slideFade 0.5s forwards; }
-  @keyframes slideFade { to { opacity: 1; transform: translateY(0); } }
-  #shareButtons { text-align: center; margin: 10px 0 30px; }
-  #shareButtons button { margin: 0 8px; padding: 10px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; user-select: none; color: white; background-color: #ff69b4; transition: background-color 0.3s ease; }
-  #shareButtons button:hover { background-color: #ff4c9a; }
-  #countdown { font-size: 1.2rem; text-align: center; margin-bottom: 30px; user-select: none; }
-  #challenge { max-width: 480px; margin: 0 auto 30px; background: #330033; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 0 15px #ff69b4aa; }
-  #challenge p { margin-bottom: 15px; }
-  #challenge button { margin: 5px; border-radius: 10px; padding: 10px 15px; border: none; font-weight: bold; cursor: pointer; user-select: none; background-color: #ff69b4; color: #121212; transition: background-color 0.3s ease; }
-  #challenge button:hover { background-color: #ff4c9a; }
-  #challenge .result { margin-top: 15px; font-weight: bold; font-size: 1.1rem; }
-  .confetti { position: absolute; width: 6px; height: 6px; background: #ff69b4; opacity: 0.8; animation: confettiFall 1.5s linear forwards; }
-  @keyframes confettiFall { to { transform: translateY(200px) rotate(360deg); opacity: 0; } }
-  @media (max-width: 520px) {
-    .gallery img { width: 90px; height: 90px; }
-    button, .toggle-btn { font-size: 1rem; padding: 10px; }
-    .welcome, .story, section { max-width: 100%; padding: 15px; margin-bottom: 20px; }
-    #slideshow img { height: 180px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sisso Bond 💜</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap');
+
+    /* Global setup */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #fbc2eb, #a6c1ee);
+      background-size: 300% 300%;
+      animation: gradientShift 12s ease infinite;
+      overflow-x: hidden;
+      color: #fff;
+    }
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h1, h2 {
+      font-family: 'Great Vibes', cursive;
+      margin: 10px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 3rem;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+
+    section {
+      padding: 60px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Typing effect */
+    .typing {
+      font-size: 1.5rem;
+      border-right: 2px solid #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 6s steps(40, end) forwards, blink .7s infinite;
+    }
+    @keyframes typing {
+      to {width: 100%;}
+    }
+    @keyframes blink {
+      50% {border-color: transparent;}
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 1000px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 15px;
+      transition: transform .4s;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    .gallery img:hover {
+      transform: rotate(3deg) scale(1.05);
+    }
+
+    /* Bond text */
+    .bond-box {
+      background: rgba(255,255,255,0.2);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 800px;
+      line-height: 1.7;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Prank button */
+    .prank-btn {
+      padding: 15px 30px;
+      border: none;
+      background: #fff;
+      color: #a83279;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+    .prank-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -10px;
+      font-size: 20px;
+      animation: floatUp 8s linear infinite;
+      opacity: 0.8;
+    }
+    @keyframes floatUp {
+      from {transform: translateY(0) scale(1); opacity: 1;}
+      to {transform: translateY(-110vh) scale(0.5); opacity: 0;}
+    }
+
+    /* Surprise modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #fff;
+      color: #333;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 400px;
+      animation: pop 0.6s ease;
+    }
+    @keyframes pop {
+      from {transform: scale(0.5); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+
+    /* Footer */
+    footer {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0,0,0,0.3);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-<div id="stars"></div>
-<header>💕 Siblings' Fun Zone 💕</header>
-<div class="mode-toggle-container">
-  <button class="toggle-btn" id="modeToggleBtn" aria-label="Toggle light/dark mode">Switch to Light Mode</button>
-</div>
-<div class="welcome">
-  Welcome to the special site dedicated to the awesome bond between siblings! Dive in for cute cat emojis, funny pranks, manhwa vibes, and lovely memories.
-</div>
-<div class="story">
-  Here's a little story: From potato chores to manhwa marathons, our sibling bond is filled with laughter, pranks, and endless love! 😄💕
-</div>
+  <!-- Background Music -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg">
+  </audio>
 
-<!-- Photo Slideshow -->
-<section id="slideshow" aria-label="Photo slideshow">
-  <img src="https://placekitten.com/480/280" alt="Sample photo 1" class="active" />
-  <img src="https://placekitten.com/481/280" alt="Sample photo 2" />
-  <img src="https://placekitten.com/482/280" alt="Sample photo 3" />
-</section>
+  <!-- Section 1: Welcome -->
+  <section>
+    <h1>💜 Hey Sisso 💜</h1>
+    <div class="typing">Welcome to our magical little world...</div>
+  </section>
 
-<section>
-  <h2>Cat Emojis Corner 😺🐱🐾</h2>
-  <div style="text-align:center;">
-    <span class="cat-emoji" title="Click me!">😺</span>
-    <span class="cat-emoji" title="Click me!">🐱</span>
-    <span class="cat-emoji" title="Click me!">🐾</span>
-  </div>
-</section>
-<section>
-  <h2>Funny Quote Generator 😹</h2>
-  <button id="newQuoteBtn">Generate a silly sibling quote</button>
-  <div id="quote" aria-live="polite">Click above to get a fun quote!</div>
-  <div class="emoji-reactions" aria-label="React to quote">
-    <span class="emoji-reaction" role="button" aria-pressed="false" tabindex="0" title="Love this!">😻</span>
-    <span class="emoji-reaction" role="button" aria-pressed="false" tabindex="0" title="So funny!">😹</span>
-    <span class="emoji-reaction" role="button" aria-pressed="false" tabindex="0" title="Haha!">😼</span>
-  </div>
-  <div id="shareButtons" aria-label="Share sibling quote">
-    <button id="shareTwitter" title="Share on Twitter">🐦 Twitter</button>
-    <button id="shareFacebook" title="Share on Facebook">📘 Facebook</button>
-  </div>
-</section>
-<section>
-  <h2>Prank Box 🎁</h2>
-  <div class="animation-box" id="prankBox" tabindex="0" role="button" aria-pressed="false" aria-label="Toggle prank message">
-    Click to reveal a surprise message!
-    <div class="prank-text" id="prankText"></div>
-  </div>
-</section>
-<section id="countdown" aria-live="polite" aria-atomic="true"></section>
-<section id="trivia" aria-label="Sibling trivia quiz">
-  <h2>Sibling Trivia Quiz 🤔</h2>
-  <p id="triviaQuestion">Click "Start Quiz" to play!</p>
-  <button id="startQuizBtn">Start Quiz</button>
-  <div id="quizAnswers"></div>
-  <div id="quizResult"></div>
-</section>
-<section id="messageBoard" aria-label="Visitor message board">
-  <h2>Message Board 📝</h2>
-  <textarea id="messageInput" placeholder="Leave a message for your sibling..."></textarea>
-  <button id="postMessageBtn">Post Message</button>
-  <div id="messages" aria-live="polite" aria-atomic="true"></div>
-</section>
-<section>
-  <h2>Romance Webtoons & Manhwas 💖</h2>
-  <ul style="max-width: 320px; margin: 0 auto; color: #ffb6c1; user-select:none;">
-    <li><strong>True Beauty</strong> - A heartwarming romantic comedy</li>
-    <li><strong>What's Wrong with Secretary Kim?</strong> - Office romance and laughs</li>
-    <li><strong>My Dear Cold-Blooded King</strong> - Historical romance drama</li>
-    <li><strong>Cheese in the Trap</strong> - Complex relationships and intrigue</li>
-    <li><strong>Light On Me</strong> - Sweet LGBTQ+ romance story</li>
-  </ul>
-</section>
-<section id="challenge" aria-label="Sibling challenge mini-game">
-  <h2>Sibling Challenge 🎯</h2>
-  <p>Match the quote to the correct sibling nickname!</p>
-  <div id="challengeButtons"></div>
-  <div class="result" id="challengeResult"></div>
-</section>
-<section>
-  <h2>Photo Gallery 📸</h2>
-  <div class="gallery" id="gallery">
-    <img src="https://placekitten.com/200/200" alt="Cute cat photo 1" title="Cute kitty 1" />
-    <img src="https://placekitten.com/201/201" alt="Cute cat photo 2" title="Cute kitty 2" />
-    <img src="https://placekitten.com/202/202" alt="Cute cat photo 3" title="Cute kitty 3" />
-    <img src="https://placekitten.com/203/203" alt="Cute cat photo 4" title="Cute kitty 4" />
-  </div>
-</section>
-<audio id="bgm" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
-  Your browser does not support the audio element.
-</audio>
-<div style="width: 480px; max-width: 100%; margin-bottom: 30px; text-align: center;">
-  <button id="toggleMusicBtn">Pause Music 🔈</button>
-</div>
-<script>
-  const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
-  const correctSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
-  const wrongSound = new Audio('https://www.soundjay.com/button/sounds/button-10.mp3');
+  <!-- Section 2: Gallery -->
+  <section>
+    <h2>📸 Our Memories</h2>
+    <div class="gallery">
+      <img src="https://picsum.photos/400/300?random=11" alt="Memory 1">
+      <img src="https://picsum.photos/400/300?random=12" alt="Memory 2">
+      <img src="https://picsum.photos/400/300?random=13" alt="Memory 3">
+      <img src="https://picsum.photos/400/300?random=14" alt="Memory 4">
+    </div>
+  </section>
 
-  function createHeart(x, y) {
-    const heart = document.createElement('span');
-    heart.textContent = '💖';
-    heart.className = 'floating-heart';
-    heart.style.left = x + (Math.random()*30-15) + 'px';
-    heart.style.top = y + 'px';
-    heart.style.fontSize = (16 + Math.random()*20) + 'px';
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1500);
-  }
+  <!-- Section 3: Bond -->
+  <section>
+    <h2>🌸 Our Precious Bond 🌸</h2>
+    <div class="bond-box">
+      Sisters may fight and tease,  
+      but at the end of the day, you are my forever friend.  
+      You are my partner in crime, my secret keeper, my biggest cheerleader.  
+      No matter what, our bond is infinite 💫  
+    </div>
+  </section>
 
-  function launchConfetti(x, y){
-    for(let i=0;i<10;i++){
-      const confetti=document.createElement('div');
-      confetti.className='confetti';
-      confetti.style.left = x + Math.random()*50 + 'px';
-      confetti.style.top = y + 'px';
-      document.body.appendChild(confetti);
-      setTimeout(()=>confetti.remove(), 1500);
+  <!-- Section 4: Fun Surprise -->
+  <section>
+    <h2>🎉 A Little Fun 🎉</h2>
+    <button class="prank-btn" id="prank">Click Me!</button>
+  </section>
+
+  <!-- Section 5: Ending -->
+  <section>
+    <h2>💜 Always With You 💜</h2>
+    <p style="max-width:600px;text-align:center;">
+      Wherever life takes us, remember you’ll always have me.  
+      I’ll annoy you forever, but also protect you forever 💜  
+    </p>
+  </section>
+
+  <footer>
+    Made with 💜 by your sibling
+  </footer>
+
+  <!-- Modal Surprise -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2>Gotcha Sisso 😜</h2>
+      <p>You thought this was just cute? It’s also a prank page!  
+      But seriously... love you infinity 💜</p>
+      <button onclick="closeModal()">Awww 💜</button>
+    </div>
+  </div>
+
+  <script>
+    // Floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = Math.random() > 0.5 ? "💜" : "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
     }
-  }
+    setInterval(createHeart, 600);
 
-  document.querySelectorAll('.cat-emoji').forEach(emoji => {
-    emoji.addEventListener('click', e => {
-      createHeart(e.pageX, e.pageY);
-      emoji.classList.add('wiggle');
-      setTimeout(()=>emoji.classList.remove('wiggle'), 500);
-      clickSound.play();
-      document.getElementById('bgm').play();
+    // Prank button moving around
+    const prankBtn = document.getElementById("prank");
+    prankBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - 150);
+      const y = Math.random() * (window.innerHeight - 150);
+      prankBtn.style.position = "absolute";
+      prankBtn.style.left = x + "px";
+      prankBtn.style.top = y + "px";
     });
-  });
+    prankBtn.addEventListener("click", () => {
+      document.getElementById("modal").style.display = "flex";
+    });
 
-  // Floating hearts randomly
-  setInterval(()=>{ createHeart(Math.random()*window.innerWidth, window.innerHeight); }, 3000);
+    // Close modal
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
 
-  // Your existing JS code for quotes, prank box, slideshow, trivia, challenge, messages, etc.
-  // ...[keep all your existing JS exactly as is, but add correctSound/wrongSound on quiz/challenge responses]
-
-</script>
+    // Confetti effect
+    document.addEventListener("click", (e) => {
+      for (let i=0;i<10;i++) {
+        const confetti = document.createElement("div");
+        confetti.innerText = "✨";
+        confetti.style.position = "fixed";
+        confetti.style.left = e.clientX + "px";
+        confetti.style.top = e.clientY + "px";
+        confetti.style.fontSize = Math.random()*20+10+"px";
+        confetti.style.animation = "floatUp 3s linear forwards";
+        document.body.appendChild(confetti);
+        setTimeout(()=>confetti.remove(),3000);
+      }
+    });
+  </script>
 </body>
 </html>
